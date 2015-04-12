@@ -1,0 +1,8 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<Library LVVersion="14008000">
+	<Property Name="NI.Lib.Icon" Type="Bin">&amp;!#!!!!!!!)!"1!&amp;!!!-!%!!!@````]!!!!"!!%!!!-3!!!*Q(C=\:;\&lt;F."%)9HA'1;CF35))MOIJK#&amp;X"N6UZI#.U]A"OHQYA#FQCK59QCC%2B+17+:!LHAIA%1EQ3*3*U@A5`1*LF/S?&lt;CU3=2!AE#H9^^PL`&gt;W?_MW&gt;^:*'SX23Z)?GS*B?V'@R\E^P-@O%0*L&lt;?6@T(+8X&gt;3_H4"P'.]3`L.^9''WFXM&amp;5ID-`TV^?W"B_9-^E@$.9([Z`/]_MLW[^85NJ_F^,HXMJW\WT&lt;P`D[[[6@H^B[%`X'QKH`N(7KZ`(M;K`UP_-`4$PVROK0B=:K[MUT0JKQ5(_W-X&gt;1LD^MV?&gt;47GYMIR_W4PT'E^GXR`[DINR=7D\LVTO&gt;I`LT"[UC^VR+P4LD_?7C0O/Z,W8^X\K_``[6`:H?Z)9`MX^2O]L0OX0JJ,`=2+;E?"!214BBB%JBJ5!0^%!0^%!0&gt;%&gt;X&gt;%&gt;X&gt;%&gt;X&gt;%-X&gt;%-X&gt;%-X&gt;%68&gt;%68&gt;%68^,+D#\KA#TK\%B10#A6*AQ4":&amp;!E?!NY!J[!*_$BKQ1]!5`!%`!%0%S2A#@A#8A#HI#(:2,Q"$Q"4]!4]*#K*)GSI]-4]*"?("[(R_&amp;R?"Q?3IL$YQ!YR:T%4B)QR$'&gt;A=0D]$A]$-8B=8A=(I@(Y=%7B]@B=8A=(I?(*?7O?%F4&gt;(2Y3#-'D]&amp;D]"A]"A_JR?!R?!Q?A]@AI:Q90!;0!7%5.*+$)-9C9Y,RR?!R?0A1A]@A-8A-(I-(K\R$6OZ-16.U&gt;(A5(I6(Y6&amp;Y&amp;"Z3C-+D]#A]#I`#1VJ2?"1?B5@B58AI*1K0QK0Q+#"+5=K,EER:K%R3")7(6XF;N,R,8J*IW58SY:6]+#5@.MG(30,BE(T4*&gt;^-S4&gt;*]O:,XF4*GS6Z%S2@H'2IS4#3CUB?8%S5-?]D9EDUC3\2*JJ%D;A3U]830TRR0"\,;$33Y8!I`8Z@ONWON.NN;4;&lt;5KP6J&amp;KNSP4U^-H@C&lt;PUIT:V`&amp;TK-#;O%Z5C.N0(SO+&lt;4G82C@O&gt;SN,2H"0`R&gt;45=V`K0(CV*\&gt;@XJ)\0HK`?_R&gt;*9J]GS@0J8`BW3D8**XZ']9?`13$ZJ(#!!!!!!</Property>
+	<Property Name="NI.Lib.SourceVersion" Type="Int">335577088</Property>
+	<Property Name="NI.Lib.Version" Type="Str">1.0.0.0</Property>
+	<Item Name="change.vi" Type="VI" URL="../VIs/change.vi"/>
+	<Item Name="test.dll" Type="Document" URL="../../test/Debug/test.dll"/>
+</Library>
