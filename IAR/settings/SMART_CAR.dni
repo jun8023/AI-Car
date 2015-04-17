@@ -32,10 +32,64 @@ Stop=1
 [Simulator]
 Freq=10000000
 MultiCoreRunAll=1
+[DebugChecksum]
+Checksum=-330002080
+[Exceptions]
+StopOnUncaught=_ 0
+StopOnThrow=_ 0
+[CallStack]
+ShowArgs=0
+[Disassembly]
+MixedMode=1
+[JLinkDriver]
+CStepIntDis=_ 0
+TraceBufferSize=0x00010000
+TraceStallIfFIFOFull=0x00000000
+TracePortSize=0x00000004
+[array_types]
+Fmt0=uint8[205]	3	0
+Fmt1=uint8[2]	3	0
+[watch_formats]
+Fmt0={W}0:change_left	3	0
+Fmt1={W}0:error_times_left	3	0
+Fmt2={W}0:left_dot	3	0
+Fmt3={W}0:left_end_flag	3	0
+Fmt4={W}0:left_flag	3	0
+Fmt5={W}0:left_i	3	0
+Fmt6={W}0:left_j	3	0
+Fmt7={W}0:left_l_dir	3	0
+Fmt8={W}0:read_value	4	0
+Fmt9={W}0:right_dot	3	0
+Fmt10={W}0:right_end_flag	3	0
+Fmt11={W}0:right_flag	3	0
+Fmt12={W}0:right_i	3	0
+Fmt13={W}0:right_l_dir	3	0
+Fmt14={W}0:type	3	0
+[Trace1]
+Enabled=0
+ShowSource=1
 [Disassemble mode]
 mode=0
 [Breakpoints2]
-Count=0
+Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\my ku\src\SD.c}.242.2" 0 0 1 "" 0 "" 0
+Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\main.c}.7.1" 0 0 1 "" 0 "" 0
+Bp2=_ 1 "EMUL_CODE" "{$PROJ_DIR$\main.c}.117.16" 0 0 1 "" 0 "" 0
+Count=3
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
 [Aliases]
 Count=0
 SuppressDialog=0
+[CallStackLog]
+Enabled=0
+[DriverProfiling]
+Enabled=0
+Mode=1
+Graph=0
+Symbiont=0
+Exclusions=

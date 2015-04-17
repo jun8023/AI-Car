@@ -184,15 +184,15 @@ void SPI_Read(uint8 SPI_NUM,uint8* data)
 uint8 SPIx_ReadWriteByte(uint8 TX_DATA)
  {
      uint8 date;
-          HWREG(SPI_PUSHR_BASE+SPI2*(0X1000))=SPI_PUSHR_CONT_MASK
+          HWREG(SPI_PUSHR_BASE+SPI1*(0X1000))=SPI_PUSHR_CONT_MASK
                                                 |SPI_PUSHR_CTAS(0)
                                                 |SPI_PUSHR_PCS(1)   
                                                 |SPI_PUSHR_TXDATA(TX_DATA); 
-     while(!(HWREG(SPI_SR_BASE+SPI2*(0X1000))&(SPI_SR_TCF_MASK)));
-     while(!((HWREG(SPI_SR_BASE+SPI2*(0X1000))&SPI_SR_RFDF_MASK)>>1));
-     date=(uint8)HWREG(SPI_POPR_BASE+SPI2*(0X1000));
-     HWREG(SPI_SR_BASE+SPI2*(0X1000))=0XFFFF0000;
-     HWREG(SPI_MCR_BASE+SPI2*(0X1000))|=SPI_MCR_CLR_TXF_MASK
+     while(!(HWREG(SPI_SR_BASE+SPI1*(0X1000))&(SPI_SR_TCF_MASK)));
+     while(!((HWREG(SPI_SR_BASE+SPI1*(0X1000))&SPI_SR_RFDF_MASK)>>1));
+     date=(uint8)HWREG(SPI_POPR_BASE+SPI1*(0X1000));
+     HWREG(SPI_SR_BASE+SPI1*(0X1000))=0XFFFF0000;
+     HWREG(SPI_MCR_BASE+SPI1*(0X1000))|=SPI_MCR_CLR_TXF_MASK
                                        |SPI_MCR_CLR_RXF_MASK;
       return date;
  }

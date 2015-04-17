@@ -9,6 +9,7 @@ union {
 }DAT;
 uint8 sensor[8];
 uint8  i=0,j=0,k=0,t=0;
+uint16 n=1;
 uint8 flag_photo=0;
 
 void main()
@@ -16,7 +17,7 @@ void main()
      SYS_CLOCK_SET(SYS_CLOCK_150M,1,2,3,6);
      DisableInterrupts
          //VSYNC中断
-         GPIO_INIT(VSYNC_PORT,VSYNC_PIN,INPUT);
+     GPIO_INIT(VSYNC_PORT,VSYNC_PIN,INPUT);
      GPIOPULL_SET(VSYNC_PORT,VSYNC_PIN,PULL_UP);
      Enable_IRQ(INT_PORTC);
      GPIOINT_Enable(VSYNC_PORT,VSYNC_PIN,LEVEL_FALLING);
@@ -75,8 +76,8 @@ void main()
     GPIO_INIT(CS_PORT,CS_PIN,1);
     GPIO_DSE(CS_PORT,CS_PIN);
 //	SPILCD_CS_SET;
-    GPIOType_SPI(SPI2,SPI2_PCS0_PTB20,SPI2_SCK_PTB21,SPI2_SOUT_PTB22,SPI2_SIN_PTB23);
-    SPI_init(SPI2,MASTER);
+    GPIOType_SPI(SPI1,SPI1_PCS1_PTE0,SPI1_SCK_PTE2,SPI1_SOUT_PTE1,SPI1_SIN_PTE1);
+    SPI_init(SPI1,MASTER);
     //PIT
      PIT_CLOCK_Enable
     //PIT_INIT(PIT0,150000000,DEBUG_STOP);
@@ -91,47 +92,50 @@ void main()
      EnableInterrupts
      while(1)
       {
+          LED_ON(led0,led_off);
           if(flag_photo)
            {
+                LED_ON(led0,led_on);
                flag_photo=0;
+              
+               /*for(i=0;i<dot_num;i++)
+                {
+                    date[center[i][0]][center[i][1]]=0;
+                }
+               UART_SS(UART0,"image");
+               for(i=0;i<X_MAX;i++)
+                   for(j=0;j<Y_MAX;j++)
+                    {if(date[i][j]==0)
+                     {
+                         date[i][j]=1;
+                     }
+                     UART_S1(UART0,date[i][j]);
+                    }*/
                CAM_get();//图像处理以及中线提取，外部变量
-               input=(center[4][1]+center[6][1]+center[8][1]+center[10][1]+center[12][1])/5;
+                
+               input=(center[2][1]+center[4][1]+center[6][1]+center[8][1]+center[10][1])/5;
                input_error=input-190/2;
                output=p*input_error;
-               servo_set(500+output);
-               send_flot(UART0,input);
-               /*for(i=0;i<dot_num;i++)
-						 {
-                        date[center[i][0]][center[i][0]]=0;
-						}
-                 UART_SS(UART0,"image");
-                   for(i=0;i<X_MAX;i++)
-                       for(j=0;j<Y_MAX;j++)
-                        {if(date[i][j]==0)
-                            {
-                                date[i][j]=1;
-                            }
-                           UART_S1(UART0,date[i][j]);
-                        }
-          /*     SD_Init();
-          for (i=0;i<512;i++)
+               servo_set(500-output);
+               //send_flot(UART0,input);
+                    /*SD_Init();
+               for (i=0;i<512;i++)
               buff[i]=0x5A;
           for (i=0;i<X_MAX;i++)
               for (j=0;j<Y_MAX;j++)
                   DAT.date1[i][j]=date[i][j];
           SD_WriteMultiSectors(buff,800+n*100,1);
-          for (i=0;i<50;i++)
           SD_WriteMultiSectors(DAT.img[0],801+n*100,50);
           n++;
-          if(n==100) 
+          if(n==1000) 
            {
                n=1;
            }*/
                    i=0;j=0;
-                   EnableInterrupts
                    GPIOINT_Clear(PORTC);
                    Enable_IRQ(INT_PORTC);
                    GPIOINT_Enable(VSYNC_PORT,VSYNC_PIN,LEVEL_RISING);
+                   EnableInterrupts
                }
           }
  }
@@ -143,7 +147,7 @@ void PORTC_IRQHandler(void)
       {
           PORTC_ISFR|=0X8000;
 #if 0//隔行扫描
-          if((i%2==0)&&(i>5))
+          if((i%2==0)&&(i>6))
            {
                DMA_Enable_new(DMAMUX0,DMA_CH0);
                if(i>=X_MAX*2)
@@ -158,17 +162,17 @@ void PORTC_IRQHandler(void)
            }
 #endif
 #if 1  //逐行扫描
-          if(i>5)
+          if(i>6)
           DMA_Enable_new(DMAMUX0,DMA_CH0);
 #endif
-          if(i>=X_MAX+5)
+          if(i>=X_MAX+6)
            {
                flag_photo=1;
                Disable_IRQ(INT_PORTC);
                DisableInterrupts;
                GPIOINT_Disable(HREF_PORT,HREF_PIN);
                DMA_Disable_new(DMAMUX0,DMA_CH0);
-               DMA_SetDestAddress(DMA_CH0, date);       
+               DMA_SetDestAddress(DMA_CH0, date);   
            }
           i++;
       }
@@ -187,5 +191,6 @@ void DMA0_DMA16_IRQHandler(void)
 void UART0_RX_TX_IRQHandler(void)
  {
      UART_FIFO_Read_value(UART0,sensor);
+     change_par(sensor,&p);
      read_pose(UART0,sensor);
  }

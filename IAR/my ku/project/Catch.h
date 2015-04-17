@@ -6,11 +6,11 @@
 //定义采样点数
 #define dot_num 20
 //定义中线起始和终止位置
-#define start   3
+#define start   0
 #define end     10
 #define  white 130
 #define dark    100
-extern  uint8   date[X_MAX+5][Y_MAX+15],center[dot_num][2];
+extern  uint8   date[X_MAX+6][Y_MAX+15],center[dot_num][2];
 //确定跟随扫描点个数
 #define scale   5
 

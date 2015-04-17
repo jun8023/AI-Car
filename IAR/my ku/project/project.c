@@ -19,28 +19,32 @@ void display(uint8 x,uint8 y,int32 num)
  }
 void led_init()
  {
-     uint8 i =0;
-     for(i=0;i<8;i++)
-     GPIO_INIT(PORTC,i,OUTPUT);
+     GPIO_INIT(PORTA,7,OUTPUT);
+     GPIO_INIT(PORTA,11,OUTPUT);
+     GPIO_INIT(PORTA,12,OUTPUT);
+     GPIO_INIT(PORTA,17,OUTPUT);
+     GPIO_SET(PORTA,7,1);
+     GPIO_SET(PORTA,11,1);
+     GPIO_SET(PORTA,12,1);
+     GPIO_SET(PORTA,17,1);
  }
-void LED_ON(uint8 pin,uint8 date)
+void LED_ON(uint8 led_num,uint8 date)
  {
-     GPIO_SET(PORTC,pin,date);
+     GPIO_SET(PORTA,led_num,date);
  }
 void motor_PWM_init()
  {
-     GPIO_INIT(PORTA,6,OUTPUT);
-     GPIO_INIT(PORTA,7,OUTPUT);
-     GPIO_INIT(PORTA,8,OUTPUT);
-     GPIO_INIT(PORTA,9,OUTPUT);
-     GPIO_SET(PORTA,6,1);
-     GPIO_SET(PORTA,9,0);
-     GPIO_SET(PORTA,8,1);
-     FTM_PWM_Init(EPWM_MODE, FTM0_CH4_PTA7, 50, 0.3);
+     FTM_PWM_Init(EPWM_MODE, FTM3_CH4_PTC8, 50, 0);
+     FTM_PWM_Init(EPWM_MODE, FTM3_CH5_PTC9, 50, 0);
+     FTM_PWM_Init(EPWM_MODE, FTM3_CH6_PTC10, 50, 0);
+     FTM_PWM_Init(EPWM_MODE, FTM3_CH7_PTC11, 50, 0);
  }
-void motor_dutyset(float pwm1_duty)
+void motor_dutyset(float pwm1_duty,float pwm2_duty,float pwm3_duty,float pwm4_duty)
  {
-      FTM_PWM_Set_Duty(FTM0,FTM_CH4,pwm1_duty/100);
+      FTM_PWM_Set_Duty(FTM3,FTM_CH4,pwm1_duty/100);
+      FTM_PWM_Set_Duty(FTM3,FTM_CH5,pwm2_duty/100);
+      FTM_PWM_Set_Duty(FTM3,FTM_CH6,pwm3_duty/100);
+      FTM_PWM_Set_Duty(FTM3,FTM_CH7,pwm4_duty/100);
  }
 //最低6%，最高8.5%
 void servo_driver_init()
@@ -84,29 +88,7 @@ union
      uint8 a[4];
      int32 val;
  }xh;
-//***********************************************************************************************
-//只适用用学长写的上位机，可删除
-//传输一个float类型值给上位机
-void send_float(uint32 UART_NUM,float val)
- {
-     xg.val=val;
-     UART_S1(UART_NUM,0X55);
-     UART_S1(UART_NUM,0X0F);
-     UART_S1(UART_NUM,xg.a[0]);
-     UART_S1(UART_NUM,xg.a[1]);
-     UART_S1(UART_NUM,xg.a[2]);
-     UART_S1(UART_NUM,xg.a[3]);
-     UART_S1(UART_NUM,0XAA);
- }
-void send_uint32(uint32 UART_NUM,uint32 val)
- {
-     xi.val=val;
-     UART_SS(UART_NUM,"ui32");
-     UART_S1(UART_NUM,xi.a[3]);
-     UART_S1(UART_NUM,xi.a[2]);
-     UART_S1(UART_NUM,xi.a[1]);
-     UART_S1(UART_NUM,xi.a[0]);
- }
+
 void send_flot(uint32 UART_NUM,float val)
  {
      xg.val=val;
@@ -125,20 +107,7 @@ void send_int32(uint32 UART_NUM,int val)
      UART_S1(UART_NUM,xh.a[1]);
      UART_S1(UART_NUM,xh.a[0]);
  }
-//传输数据到六条曲线显示，line_num:1-6,表示曲线标号
-//val:要传输的数值
 void send_line(uint32 UART_NUM,char line_num,float val)
- {
-     xg.val=val;
-     UART_S1(UART_NUM,0X55);
-     UART_S1(UART_NUM,0X0F+line_num*0x10);
-     UART_S1(UART_NUM,xg.a[0]);
-     UART_S1(UART_NUM,xg.a[1]);
-     UART_S1(UART_NUM,xg.a[2]);
-     UART_S1(UART_NUM,xg.a[3]);
-     UART_S1(UART_NUM,0XAA);
- }
-void send_line2(uint32 UART_NUM,char line_num,float val)
  {
      xg.val=val;
      UART_SS(UART_NUM,"lin");
@@ -167,61 +136,36 @@ void read_pose(uint32 UART_NUM,char* data)
           xg.a[2]=data[5];
           xg.a[3]=data[4];
           driver=(float)xg.val;
-          motor_dutyset(driver);
+          motor_dutyset(0,driver,0,driver);
       }
  }
-void P1_I1_D1_change(float* P1,float* I1,float* D1,char* data)
+void change_par(char* data,float *date)
  {
-     if((data[0]==0xaa)&&(data[1]==0xab)&&(data[2]==0xac)&&(data[3]==0xad))
+      if((data[0]==8)&&(data[1]==2)&&(data[2]==2)&&(data[3]==3))
       {
-          xg.a[0]=data[4];
-          xg.a[1]=data[5];
-          xg.a[2]=data[6];
-          xg.a[3]=data[7];
-          *P1=xg.val;
+          xg.a[0]=data[7];
+          xg.a[1]=data[6];
+          xg.a[2]=data[5];
+          xg.a[3]=data[4];
+          *date=(float)xg.val;
       }
-     if((data[0]==0xba)&&(data[1]==0xbb)&&(data[2]==0xbc)&&(data[3]==0xbd))
+     if((data[0]==8)&&(data[1]==3)&&(data[2]==2)&&(data[3]==3))
       {
-          xg.a[0]=data[4];
-          xg.a[1]=data[5];
-          xg.a[2]=data[6];
-          xg.a[3]=data[7];
-          *I1=xg.val;
+          xg.a[0]=data[7];
+          xg.a[1]=data[6];
+          xg.a[2]=data[5];
+          xg.a[3]=data[4];
+          *date=(float)xg.val;
       }
-     if((data[0]==0xca)&&(data[1]==0xcb)&&(data[2]==0xcc)&&(data[3]==0xcd))
+     if((data[0]==8)&&(data[1]==4)&&(data[2]==2)&&(data[3]==3))
       {
-          xg.a[0]=data[4];
-          xg.a[1]=data[5];
-          xg.a[2]=data[6];
-          xg.a[3]=data[7];
-          *D1=xg.val;
-      }
- }
-void P2_I2_D2_change(float* P2,float* I2,float* D2,char* data)
- {
-     if((data[0]==0xda)&&(data[1]==0xdb)&&(data[2]==0xdc)&&(data[3]==0xdd))
-      {
-          xg.a[0]=data[4];
-          xg.a[1]=data[5];
-          xg.a[2]=data[6];
-          xg.a[3]=data[7];
-          *P2=xg.val;
-      }
-     if((data[0]==0xea)&&(data[1]==0xeb)&&(data[2]==0xec)&&(data[3]==0xed))
-      {
-          xg.a[0]=data[4];
-          xg.a[1]=data[5];
-          xg.a[2]=data[6];
-          xg.a[3]=data[7];
-          *I2=xg.val;
-      }
-     if((data[0]==0xfa)&&(data[1]==0xfb)&&(data[2]==0xfc)&&(data[3]==0xfd))
-      {
-          xg.a[0]=data[4];
-          xg.a[1]=data[5];
-          xg.a[2]=data[6];
-          xg.a[3]=data[7];
-          *D2=xg.val;
+          xg.a[0]=data[7];
+          xg.a[1]=data[6];
+          xg.a[2]=data[5];
+          xg.a[3]=data[4];
+          *date=(float)xg.val;
       }
  }
+
+
 //********************************************************************************************
